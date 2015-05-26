@@ -1,0 +1,19 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <service id="charles.user" class="Charles\UserBundle\Service\User">
+            <argument type="service" id="form.factory" />
+            <argument type="service" id="doctrine.orm.entity_manager" />
+        </service>
+
+        <service id="charles.user_repository" class="Charles\UserBundle\Entity\UserRepository">
+            <factory service="doctrine.orm.entity_manager" method="getRepository" />
+            <argument>Charles\UserBundle\Entity\User</argument>
+        </service>
+    </services>
+
+</container>

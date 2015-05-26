@@ -1,0 +1,4 @@
+users:
+    type: rest
+    resource: Charles\UserBundle\Controller\UserController
+    name_prefix: api_
