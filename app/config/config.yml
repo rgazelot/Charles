@@ -71,3 +71,20 @@ swiftmailer:
     username:  "%mailer_user%"
     password:  "%mailer_password%"
     spool:     { type: memory }
+
+fos_rest:
+    routing_loader:
+        default_format: json
+    body_listener: true
+    view:
+        formats:
+            jsonp: true
+            json: true
+        templating_formats:
+            html: true
+        force_redirects:
+            html: true
+        mime_types:
+            json: ['application/json', 'application/x-json', 'application/vnd.example-com.foo+json']
+        jsonp_handler: ~
+        view_response_listener: 'force'

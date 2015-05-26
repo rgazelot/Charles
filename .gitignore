@@ -8,3 +8,6 @@
 /web/bundles/*
 
 /vendor/
+
+.idea/
+/bin/phpunit
