@@ -4,13 +4,15 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
-    <!--
     <services>
-        <service id="charles_api.example" class="Charles\ApiBundle\Example">
-            <argument type="service" id="service_id" />
-            <argument>plain_value</argument>
-            <argument>%parameter_name%</argument>
+        <service id="charles.api.request_listener" class="Charles\ApiBundle\EventListener\RequestListener">
+            <argument type="service" id="charles.api.login" />
+            <tag name="kernel.event_listener" event="kernel.request" method="onKernelRequest" priority="-8" />
+        </service>
+
+        <service id="charles.api.login" class="Charles\ApiBundle\Service\Login">
+            <argument type="service" id="doctrine.orm.entity_manager" />
+            <argument type="service" id="security.context" />
         </service>
     </services>
-    -->
 </container>

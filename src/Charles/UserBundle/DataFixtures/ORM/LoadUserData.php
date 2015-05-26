@@ -15,9 +15,15 @@ class LoadUserData extends AbstractFixture
         $user = new User;
         $user->setEmail('remy@charles.com');
         $user->setPassword('foo');
+        $user->setToken('myToken');
         $user->setPhone('0601010101');
-
+        $user->setIdentifier('myIdentifier');
         $manager->persist($user);
+
+        $user = new User;
+        $user->setIdentifier('client1Identifier');
+        $manager->persist($user);
+
         $manager->flush();
     }
 

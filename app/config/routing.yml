@@ -1,4 +1,9 @@
-api:
+api_user:
   type: rest
   prefix: /api/1
   resource: @CharlesUserBundle/Resources/config/routing.yml
+
+api_message:
+  type: rest
+  prefix: /api/1
+  resource: @CharlesMessageBundle/Resources/config/routing.yml

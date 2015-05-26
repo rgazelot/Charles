@@ -1,0 +1,4 @@
+messages:
+    type: rest
+    resource: Charles\MessageBundle\Controller\MessageController
+    name_prefix: api_
