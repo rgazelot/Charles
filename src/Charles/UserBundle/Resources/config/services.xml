@@ -8,6 +8,7 @@
         <service id="charles.user" class="Charles\UserBundle\Service\User">
             <argument type="service" id="form.factory" />
             <argument type="service" id="doctrine.orm.entity_manager" />
+            <argument type="service" id="security.encoder_factory" />
         </service>
 
         <service id="charles.user_repository" class="Charles\UserBundle\Entity\UserRepository">

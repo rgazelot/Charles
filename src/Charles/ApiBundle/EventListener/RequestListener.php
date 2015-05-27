@@ -25,7 +25,13 @@ class RequestListener
     {
         $request = $event->getRequest();
 
-        if ($event->getRequestType() !== HttpKernelInterface::MASTER_REQUEST || !preg_match('/^api/', $request->attributes->get('_route')) || 'api_aggreg_messages' === $request->attributes->get('_route')) {
+        /**
+         * Do not take care of the authentication in some requests :
+         * - Not a Master request
+         * - Not match api_* pattern
+         * - Not in wildcard routes
+         */
+        if ($event->getRequestType() !== HttpKernelInterface::MASTER_REQUEST || !preg_match('/^api/', $request->attributes->get('_route')) || in_array($request->attributes->get('_route'), $this->getWildcardRoutes())) {
             return;
         }
 
@@ -36,5 +42,13 @@ class RequestListener
         }
 
         $this->login->authenticate($token);
+    }
+
+    private function getWildcardRoutes()
+    {
+        return [
+            'api_aggreg_messages',
+            'api_post_authentications',
+        ];
     }
 }

@@ -1,0 +1,4 @@
+api:
+    type: rest
+    resource: Charles\ApiBundle\Controller\ApiController
+    name_prefix: api_

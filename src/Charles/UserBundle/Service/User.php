@@ -2,7 +2,8 @@
 
 namespace Charles\UserBundle\Service;
 
-use Symfony\Component\Form\FormFactory;
+use Symfony\Component\Form\FormFactory,
+    Symfony\Component\Security\Core\Encoder\EncoderFactory;
 
 use Doctrine\ORM\EntityManager,
     Doctrine\ORM\NoResultException;
@@ -16,11 +17,13 @@ class User
 {
     private $formFactory;
     private $em;
+    private $encoder;
 
-    public function __construct(FormFactory $formFactory, EntityManager $em)
+    public function __construct(FormFactory $formFactory, EntityManager $em, EncoderFactory $encoder)
     {
         $this->formFactory = $formFactory;
         $this->em = $em;
+        $this->encoder = $encoder;
     }
 
     public function get($id)
@@ -39,7 +42,16 @@ class User
         try {
             return $this->em->getRepository('CharlesUserBundle:User')->findByIdentifier($identifier);
         } catch(NoResultException $e) {
-            throw new UserNotFoundException($identifier);
+            throw new UserNotFoundException;
+        }
+    }
+
+    public function findByEmail($email)
+    {
+        try {
+            return $this->em->getRepository('CharlesUserBundle:User')->findByEmail($email);
+        } catch(NoResultException $e) {
+            throw new UserNotFoundException;
         }
     }
 
@@ -58,5 +70,10 @@ class User
         $this->em->flush();
 
         return $user;
+    }
+
+    public function encodePassword(UserEntity $user)
+    {
+        $user->setPassword($this->encoder->getEncoder($user)->encodePassword($user->getPassword(), $user->getSalt()));
     }
 }

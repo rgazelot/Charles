@@ -7,16 +7,21 @@ use DateTime;
 use Doctrine\ORM\Mapping as ORM,
     Doctrine\Common\Collections\ArrayCollection;
 
+use JMS\Serializer\Annotation\ExclusionPolicy,
+    JMS\Serializer\Annotation\Expose,
+    JMS\Serializer\Annotation\Groups,
+    JMS\Serializer\Annotation\Type;
+
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert,
     Symfony\Component\Security\Core\User\UserInterface,
     Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Table(indexes={
- *   @ORM\Index(name="email_idx", columns={"email"}),
- *   @ORM\Index(name="phone_idx", columns={"phone"})
  * })
  * @ORM\Entity(repositoryClass="Charles\UserBundle\Entity\UserRepository")
+ *
+ * @ExclusionPolicy("all")
  */
 class User implements UserInterface
 {
@@ -26,6 +31,8 @@ class User implements UserInterface
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     *
+     * @Expose
      */
     private $id;
 
@@ -40,6 +47,8 @@ class User implements UserInterface
      * @var string $email
      *
      * @ORM\Column(name="email", unique=true, type="string", length=150, nullable=true)
+     *
+     * @Expose
      */
     private $email;
 
@@ -47,6 +56,8 @@ class User implements UserInterface
      * @var string $phone
      *
      * @ORM\Column(name="phone", unique=true, type="string", nullable=true)
+     *
+     * @Expose
      */
     private $phone;
 
@@ -57,6 +68,8 @@ class User implements UserInterface
      *
      * @Assert\NotNull()
      * @Assert\NotBlank()
+     *
+     * @Expose
      */
     private $token;
 
@@ -73,6 +86,15 @@ class User implements UserInterface
     private $identifier;
 
     /**
+     * @var DateTime $createdAt
+     *
+     * @ORM\Column(name="createdAt", type="datetime")
+     *
+     * @Expose
+     */
+    private $createdAt;
+
+    /**
      * @ORM\OneToMany(targetEntity="Charles\MessageBundle\Entity\Message", mappedBy="author")
      */
     private $messages;
@@ -81,6 +103,7 @@ class User implements UserInterface
     {
         $this->token = sha1(uniqid(true) . time());
         $this->roles = ['ROLE_USER'];
+        $this->createdAt = new DateTime;
         $this->messages = new ArrayCollection();
     }
 
@@ -94,6 +117,11 @@ class User implements UserInterface
     public function getEmail()
     {
         return $this->email;
+    }
+
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
     }
 
     public function setPassword($password)
