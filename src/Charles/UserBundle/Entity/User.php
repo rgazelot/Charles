@@ -48,6 +48,8 @@ class User implements UserInterface
      *
      * @ORM\Column(name="email", unique=true, type="string", length=150, nullable=true)
      *
+     * @Assert\Email()
+     *
      * @Expose
      */
     private $email;

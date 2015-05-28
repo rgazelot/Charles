@@ -49,6 +49,7 @@ class RequestListener
         return [
             'api_aggreg_messages',
             'api_post_authentications',
+            'api_post_users',
         ];
     }
 }

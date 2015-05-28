@@ -11,6 +11,7 @@ use Doctrine\ORM\EntityManager,
 use Charles\ApiBundle\Exception\FormNotValidException,
     Charles\UserBundle\Entity\User as UserEntity,
     Charles\UserBundle\Exception\UserNotFoundException,
+    Charles\UserBundle\Exception\EmailAlreadyUsedException,
     Charles\UserBundle\Form\UserType;
 
 class User
@@ -64,6 +65,14 @@ class User
 
         if (!$form->isValid()) {
             throw new FormNotValidException($form);
+        }
+
+        try {
+            $this->findByEmail($user->getEmail());
+
+            throw new EmailAlreadyUsedException;
+        } catch(UserNotFoundException $e) {
+
         }
 
         $this->em->persist($user);
