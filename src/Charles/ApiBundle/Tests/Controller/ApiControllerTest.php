@@ -6,6 +6,38 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class ApiControllerTest extends WebTestCase
 {
+    public function testGetAuthenticationWithUnknownToken()
+    {
+        $client = static::createClient([], ['HTTP_HOST' => "api.charles.dev"]);
+        $client->request('GET', '/api/1/authentications', ['token' => 'foooooooo'], [], ['CONTENT_TYPE' => 'application/json', 'HTTP_ACCEPT'  => 'application/json']);
+
+        $content = json_decode($client->getResponse()->getContent(), true);
+        $this->assertEquals(404, $client->getResponse()->getStatusCode());
+        $this->assertEquals('Not Found', $content['error']['message']);
+    }
+
+    public function testGetAuthenticationWithoutToken()
+    {
+        $client = static::createClient([], ['HTTP_HOST' => "api.charles.dev"]);
+        $client->request('GET', '/api/1/authentications', [], [], ['CONTENT_TYPE' => 'application/json', 'HTTP_ACCEPT'  => 'application/json']);
+
+        $content = json_decode($client->getResponse()->getContent(), true);
+        $this->assertEquals(400, $client->getResponse()->getStatusCode());
+        $this->assertEquals('Bad Request', $content['error']['message']);
+    }
+
+    public function testGetAuthentication()
+    {
+        $client = static::createClient([], ['HTTP_HOST' => "api.charles.dev"]);
+        $client->request('GET', '/api/1/authentications', ['token' => 'testToken'], [], ['CONTENT_TYPE' => 'application/json', 'HTTP_ACCEPT'  => 'application/json']);
+
+        $content = json_decode($client->getResponse()->getContent(), true);
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertEquals('test@charles.com', $content['email']);
+        $this->assertEquals('testToken', $content['token']);
+        $this->assertArrayNotHasKey('password', $content);
+    }
+
     public function testAuthenticationWithoutEmail()
     {
         $data = [
@@ -17,8 +49,8 @@ class ApiControllerTest extends WebTestCase
 
         $content = json_decode($client->getResponse()->getContent(), true);
         $this->assertEquals(400, $client->getResponse()->getStatusCode());
-        $this->assertEquals('invalid_parameters', $content['code']);
-        $this->assertEquals('email required', $content['message']);
+        $this->assertEquals('invalid_parameters', $content['error']['code']);
+        $this->assertEquals('email required', $content['error']['message']);
     }
 
     public function testAuthenticationWithoutSecret()
@@ -32,8 +64,8 @@ class ApiControllerTest extends WebTestCase
 
         $content = json_decode($client->getResponse()->getContent(), true);
         $this->assertEquals(400, $client->getResponse()->getStatusCode());
-        $this->assertEquals('invalid_parameters', $content['code']);
-        $this->assertEquals('password required', $content['message']);
+        $this->assertEquals('invalid_parameters', $content['error']['code']);
+        $this->assertEquals('password required', $content['error']['message']);
     }
 
     public function testAuthenticationWithEmailNotFound()
@@ -48,8 +80,8 @@ class ApiControllerTest extends WebTestCase
 
         $content = json_decode($client->getResponse()->getContent(), true);
         $this->assertEquals(400, $client->getResponse()->getStatusCode());
-        $this->assertEquals('invalid_credentials', $content['code']);
-        $this->assertEquals('Invalid credentials', $content['message']);
+        $this->assertEquals('invalid_credentials', $content['error']['code']);
+        $this->assertEquals('Invalid credentials', $content['error']['message']);
     }
 
     public function testAuthenticationWithWrongPassword()
@@ -64,8 +96,8 @@ class ApiControllerTest extends WebTestCase
 
         $content = json_decode($client->getResponse()->getContent(), true);
         $this->assertEquals(400, $client->getResponse()->getStatusCode());
-        $this->assertEquals('invalid_credentials', $content['code']);
-        $this->assertEquals('Invalid credentials', $content['message']);
+        $this->assertEquals('invalid_credentials', $content['error']['code']);
+        $this->assertEquals('Invalid credentials', $content['error']['message']);
     }
 
     public function testAuthentication()
