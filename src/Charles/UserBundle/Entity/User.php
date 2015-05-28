@@ -57,7 +57,7 @@ class User implements UserInterface
     /**
      * @var string $phone
      *
-     * @ORM\Column(name="phone", unique=true, type="string", nullable=true)
+     * @ORM\Column(name="phone", type="string", nullable=true)
      *
      * @Expose
      */
@@ -101,12 +101,23 @@ class User implements UserInterface
      */
     private $messages;
 
+    /**
+     * @ORM\OneToMany(targetEntity="Charles\MessageBundle\Entity\Message", mappedBy="replyTo")
+     */
+    private $messagesReplyTo;
+
     public function __construct()
     {
         $this->token = sha1(uniqid(true) . time());
         $this->roles = ['ROLE_USER'];
         $this->createdAt = new DateTime;
         $this->messages = new ArrayCollection();
+        $this->messagesReplyTo = new ArrayCollection();
+    }
+
+    public function getId()
+    {
+        return $this->id;
     }
 
     public function setEmail($email)

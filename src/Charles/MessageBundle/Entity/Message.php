@@ -2,7 +2,14 @@
 
 namespace Charles\MessageBundle\Entity;
 
+use DateTime;
+
 use Doctrine\ORM\Mapping as ORM;
+
+use JMS\Serializer\Annotation\ExclusionPolicy,
+    JMS\Serializer\Annotation\Expose,
+    JMS\Serializer\Annotation\Groups,
+    JMS\Serializer\Annotation\Type;
 
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert,
     Symfony\Component\Validator\Constraints as Assert;
@@ -11,6 +18,8 @@ use Charles\UserBundle\Entity\User;
 
 /**
  * @ORM\Entity(repositoryClass="Charles\MessageBundle\Entity\MessageRepository")
+ *
+ * @ExclusionPolicy("all")
  */
 class Message
 {
@@ -23,13 +32,20 @@ class Message
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     *
+     * @Expose
      */
     private $id;
 
     /**
      * @var string $content
      *
-     * @ORM\Column(name="content", type="string", nullable=true)
+     * @ORM\Column(name="content", type="string")
+     *
+     * @Assert\NotNull()
+     * @Assert\NotBlank()
+     *
+     * @Expose
      */
     private $content;
 
@@ -41,16 +57,44 @@ class Message
      * @Assert\NotNull()
      * @Assert\NotBlank()
      * @Assert\Choice(choices = {"sms", "app"}, message = "Choose a valid source.")
+     *
+     * @Expose
      */
     private $source;
+
+    /**
+     * @var DateTime $createdAt
+     *
+     * @ORM\Column(name="createdAt", type="datetime")
+     *
+     * @Expose
+     */
+    private $createdAt;
 
     /**
      * @var \Charles\UserBundle\Entity\User $author
      *
      * @ORM\ManyToOne(targetEntity="Charles\UserBundle\Entity\User", inversedBy="messages")
-     * @ORM\JoinColumn(name="author_id", referencedColumnName="id", nullable=true)
+     * @ORM\JoinColumn(name="authorId", referencedColumnName="id")
+     *
+     * @Expose
      */
     private $author;
+
+    /**
+     * @var \Charles\UserBundle\Entity\User $replyTo
+     *
+     * @ORM\ManyToOne(targetEntity="Charles\UserBundle\Entity\User", inversedBy="messagesReplyTo")
+     * @ORM\JoinColumn(name="replyTo", referencedColumnName="id", nullable=true)
+     *
+     * @Expose
+     */
+    private $replyTo;
+
+    public function __construct()
+    {
+        $this->createdAt = new DateTime;
+    }
 
     public function getId()
     {
@@ -69,7 +113,7 @@ class Message
         return $this->content;
     }
 
-    public function setAuthor(User $author = null)
+    public function setAuthor(User $author)
     {
         $this->author = $author;
 
@@ -91,5 +135,29 @@ class Message
     public function getSource()
     {
         return $this;
+    }
+
+    public function setReplyTo(User $replyTo = null)
+    {
+        $this->replyTo = $replyTo;
+
+        return $this;
+    }
+
+    public function getReplyTo()
+    {
+        return $this->replyTo;
+    }
+
+    public function setCreatedAt(DateTime $createdAt)
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
     }
 }

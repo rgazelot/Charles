@@ -9,7 +9,6 @@ use Symfony\Component\Form\FormFactory;
 use Charles\ApiBundle\Exception\FormNotValidException,
     Charles\MessageBundle\Form\MessageType,
     Charles\MessageBundle\Entity\Message as MessageEntity,
-    Charles\MessageBundle\Entity\Conversation,
     Charles\UserBundle\Entity\User;
 
 class Message
@@ -23,12 +22,17 @@ class Message
         $this->em = $em;
     }
 
-    public function create(array $data, User $author, Conversation $conversation = null)
+    public function findByUser(User $user)
+    {
+        return $this->em->getRepository('CharlesMessageBundle:Message')->findByUser($user);
+    }
+
+    public function create(array $data, User $author, User $replyTo = null)
     {
         $message = new MessageEntity;
         $message->setAuthor($author);
+        $message->setReplyTo($replyTo);
         $message->setSource(isset($data['source']) ? $data['source'] : null);
-        $message->setConversation($conversation);
 
         $form = $this->formFactory->create(new MessageType, $message, ['allow_extra_fields' => true]);
         $form->submit($data);

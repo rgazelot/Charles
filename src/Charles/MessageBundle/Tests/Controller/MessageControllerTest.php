@@ -6,61 +6,92 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class MessageControllerTest extends WebTestCase
 {
-    public function testCreateMessage()
+    public function testCreateMessageWithUserNotFound()
     {
         $data = [
-            "content" => "My content",
+            "content" => "An admin answer",
             "source" => "app",
         ];
 
         $client = static::createClient([], ['HTTP_HOST' => "api.charles.dev"]);
-        $client->request('POST', '/api/1/messages', $data, [], [
+        $client->request('POST', '/api/1/users/99999999999999999999/messages', [], [], [
             'CONTENT_TYPE' => 'application/json',
             'HTTP_ACCEPT'  => 'application/json',
-            'HTTP_TOKEN' => 'myToken',
+            'HTTP_TOKEN' => 'testToken',
         ], json_encode($data));
 
-        $data = json_decode($client->getResponse()->getContent(), true);
+        $content = json_decode($client->getResponse()->getContent(), true);
+        $this->assertEquals(404, $client->getResponse()->getStatusCode());
+    }
+
+    public function testCreateMessageWithInvalidData()
+    {
+        $data = [
+            "content" => null,
+            "source" => "app",
+        ];
+
+        $client = static::createClient([], ['HTTP_HOST' => "api.charles.dev"]);
+        $client->request('POST', '/api/1/users/2/messages', [], [], [
+            'CONTENT_TYPE' => 'application/json',
+            'HTTP_ACCEPT'  => 'application/json',
+            'HTTP_TOKEN' => 'testToken',
+        ], json_encode($data));
+
+        $content = json_decode($client->getResponse()->getContent(), true);
+        $this->assertEquals(400, $client->getResponse()->getStatusCode());
+        $this->assertEquals('Validation Failed', $content['message']);
+    }
+
+    public function testCreateMessage()
+    {
+        $data = [
+            "content" => "My answer",
+            "source" => "app",
+        ];
+
+        $client = static::createClient([], ['HTTP_HOST' => "api.charles.dev"]);
+        $client->request('POST', '/api/1/users/2/messages', [], [], [
+            'CONTENT_TYPE' => 'application/json',
+            'HTTP_ACCEPT'  => 'application/json',
+            'HTTP_TOKEN' => 'testToken',
+        ], json_encode($data));
+
+        $content = json_decode($client->getResponse()->getContent(), true);
         $this->assertEquals(201, $client->getResponse()->getStatusCode());
-        $this->assertArrayHasKey('content', $data);
-        $this->assertEquals('My content', $data['content']);
-        $this->assertArrayHasKey('source', $data);
-        $this->assertEquals('app', $data['source']);
+        $this->assertEquals('My answer', $content['content']);
     }
 
-    public function testAggregWithUserMessage()
+    public function testgetMessageOfUnknownUser()
     {
-        $data = [
-            "type" => "text",
-            "to" => "33644630246",
-            "msisdn" => "myIdentifier",
-            "messageId" => "000000FFFB0356D1",
-            'text' => 'This+is+an+inbound+message',
-            'message-timestamp' => '2012-08-19+20%3A38%3A23',
-        ];
-
         $client = static::createClient([], ['HTTP_HOST' => "api.charles.dev"]);
-        $client->request('GET', '/api/1/messages/aggreg', $data, [], ['CONTENT_TYPE' => 'application/json', 'HTTP_ACCEPT'  => 'application/json']);
+        $client->request('GET', '/api/1/users/9999999999/messages', [], [], [
+            'CONTENT_TYPE' => 'application/json',
+            'HTTP_ACCEPT'  => 'application/json',
+            'HTTP_TOKEN' => 'testGetAdminMessagesToken',
+        ]);
 
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        $this->assertEquals('', json_decode($client->getResponse()->getContent()));
+        $content = json_decode($client->getResponse()->getContent(), true);
+        $this->assertEquals(404, $client->getResponse()->getStatusCode());
     }
 
-    public function testAggregWithoutUserMessage()
+    public function testgetMessage()
     {
-        $data = [
-            "type" => "text",
-            "to" => "33644630246",
-            "msisdn" => "jduERTopdu",
-            "messageId" => "000000FFFB0356D1",
-            'text' => 'This+is+an+inbound+message',
-            'message-timestamp' => '2012-08-19+20%3A38%3A23',
-        ];
-
         $client = static::createClient([], ['HTTP_HOST' => "api.charles.dev"]);
-        $client->request('GET', '/api/1/messages/aggreg', $data, [], ['CONTENT_TYPE' => 'application/json', 'HTTP_ACCEPT'  => 'application/json']);
+        $client->request('GET', '/api/1/users/4/messages', [], [], [
+            'CONTENT_TYPE' => 'application/json',
+            'HTTP_ACCEPT'  => 'application/json',
+            'HTTP_TOKEN' => 'testGetAdminMessagesToken',
+        ]);
 
+        $content = json_decode($client->getResponse()->getContent(), true);
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        $this->assertEquals('', json_decode($client->getResponse()->getContent()));
+        $this->assertCount(2, $content);
+        $this->assertEquals('My question', $content[0]['content']);
+        $this->assertEquals('testUserMessages@charles.com', $content[0]['author']['email']);
+        $this->assertArrayNotHasKey('replyTo', $content[0]);
+        $this->assertEquals('My answer', $content[1]['content']);
+        $this->assertEquals('testGetAdminMessages@charles.com', $content[1]['author']['email']);
+        $this->assertEquals('testUserMessages@charles.com', $content[1]['reply_to']['email']);
     }
 }

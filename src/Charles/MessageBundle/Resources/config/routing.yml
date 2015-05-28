@@ -2,3 +2,8 @@ messages:
     type: rest
     resource: Charles\MessageBundle\Controller\MessageController
     name_prefix: api_
+
+aggreg:
+    type: rest
+    resource: Charles\MessageBundle\Controller\AggregController
+    name_prefix: api_
