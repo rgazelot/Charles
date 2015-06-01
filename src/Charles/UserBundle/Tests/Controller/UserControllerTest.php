@@ -6,7 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class UserControllerTest extends WebTestCase
 {
-    public function testgetUnknownUser()
+    public function testGetUnknownUser()
     {
         $client = static::createClient([], ['HTTP_HOST' => "api.charles.dev"]);
         $client->request('GET', '/api/1/users/9999999999', ['token' => 'testToken'], [], ['CONTENT_TYPE' => 'application/json', 'HTTP_ACCEPT'  => 'application/json']);
@@ -16,7 +16,7 @@ class UserControllerTest extends WebTestCase
         $this->assertEquals('user_not_found', $content['error']['code']);
     }
 
-    public function testgetUser()
+    public function testGetUser()
     {
         $client = static::createClient([], ['HTTP_HOST' => "api.charles.dev"]);
         $client->request('GET', '/api/1/users/1', ['token' => 'testToken'], [], ['CONTENT_TYPE' => 'application/json', 'HTTP_ACCEPT'  => 'application/json']);
@@ -27,7 +27,7 @@ class UserControllerTest extends WebTestCase
         $this->assertArrayNotHasKey('password', $content);
     }
 
-    public function testpostUserWithWrongData()
+    public function testPostUserWithWrongData()
     {
         $data = [
             'email' => 'foo',
@@ -42,7 +42,7 @@ class UserControllerTest extends WebTestCase
         $this->assertEquals('Validation Failed', $content['message']);
     }
 
-    public function testpostUserWithEmailAlreadyUsed()
+    public function testPostUserWithEmailAlreadyUsed()
     {
         $data = [
             'email' => 'test@charles.com',
@@ -56,7 +56,7 @@ class UserControllerTest extends WebTestCase
         $this->assertEquals(409, $client->getResponse()->getStatusCode());
     }
 
-    public function testpostUser()
+    public function testPostUser()
     {
         $data = [
             'email' => 'foo@charles.com',
@@ -69,5 +69,15 @@ class UserControllerTest extends WebTestCase
         $content = json_decode($client->getResponse()->getContent(), true);
         $this->assertEquals(201, $client->getResponse()->getStatusCode());
         $this->assertEquals('foo@charles.com', $content['email']);
+    }
+
+    public function testGetUsers()
+    {
+        $client = static::createClient([], ['HTTP_HOST' => "api.charles.dev"]);
+        $client->request('GET', '/api/1/users', ['token' => 'testToken'], [], ['CONTENT_TYPE' => 'application/json', 'HTTP_ACCEPT'  => 'application/json']);
+
+        $content = json_decode($client->getResponse()->getContent(), true);
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertEquals('test@charles.com', $content[0]['email']);
     }
 }

@@ -21,6 +21,13 @@ class UserController extends Controller
         return $this->view($user, 200);
     }
 
+    public function getUsersAction()
+    {
+        $users = $this->get('charles.user')->all();
+
+        return $this->view($users, 200);
+    }
+
     public function postUsersAction(Request $request)
     {
         try {

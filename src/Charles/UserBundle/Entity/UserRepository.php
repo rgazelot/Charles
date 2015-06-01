@@ -21,4 +21,11 @@ class UserRepository extends EntityRepository
             ->getQuery()
             ->getSingleResult();
     }
+
+    public function all()
+    {
+        return $this->createQueryBuilder('u')
+            ->getQuery()
+            ->getResult();
+    }
 }

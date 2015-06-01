@@ -38,6 +38,11 @@ class User
         return $user;
     }
 
+    public function all()
+    {
+        return $this->em->getRepository('CharlesUserBundle:User')->all();
+    }
+
     public function findByIdentifier($identifier = null)
     {
         try {
