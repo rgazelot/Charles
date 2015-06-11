@@ -14,6 +14,7 @@
 
         <service id="charles.message.subscriber" class="Charles\MessageBundle\EventListener\NexmoSubscriber">
             <argument type="service" id="guzzlehttp.client" />
+            <argument>%nexmo_api_number%</argument>
             <argument>%nexmo_api_key%</argument>
             <argument>%nexmo_api_secret%</argument>
             <tag name="kernel.event_subscriber" />

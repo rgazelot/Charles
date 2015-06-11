@@ -19,5 +19,6 @@ parameters:
     # A secret key that's used to generate certain security-related tokens
     secret:            ThisTokenIsNotSoSecretChangeIt
 
-    nexmo_api_key: ~
-    nexmo_api_secret: ~
+    nexmo_api_number: null
+    nexmo_api_key: null
+    nexmo_api_secret: null
