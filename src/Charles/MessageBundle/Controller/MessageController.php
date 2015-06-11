@@ -6,7 +6,8 @@ use Symfony\Component\HttpFoundation\Request;
 
 use Charles\ApiBundle\Controller\Controller,
     Charles\ApiBundle\Exception\FormNotValidException,
-    Charles\UserBundle\Exception\UserNotFoundException;
+    Charles\MessageBundle\EventListener\MessageEvents,
+    Charles\MessageBundle\EventListener\MessageEvent;
 
 class MessageController extends Controller
 {
@@ -27,6 +28,8 @@ class MessageController extends Controller
         } catch(FormNotValidException $e) {
             return $this->view($e->getForm());
         }
+
+        $this->get('event_dispatcher')->dispatch(MessageEvents::MESSAGE_CREATED, new MessageEvent($message));
 
         return $this->view($message, 201);
     }

@@ -5,9 +5,18 @@
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
+        <service id="guzzlehttp.client" class="GuzzleHttp\Client" />
+
         <service id="charles.message" class="Charles\MessageBundle\Service\Message">
             <argument type="service" id="form.factory" />
             <argument type="service" id="doctrine.orm.entity_manager" />
+        </service>
+
+        <service id="charles.message.subscriber" class="Charles\MessageBundle\EventListener\NexmoSubscriber">
+            <argument type="service" id="guzzlehttp.client" />
+            <argument>%nexmo_api_key%</argument>
+            <argument>%nexmo_api_secret%</argument>
+            <tag name="kernel.event_subscriber" />
         </service>
     </services>
 
