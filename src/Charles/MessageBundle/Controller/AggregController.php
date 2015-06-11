@@ -36,7 +36,7 @@ class AggregController extends Controller
         try {
             $message = $this->get('charles.message')->create($data, $user);
         } catch(FormNotValidException $e) {
-            return $this->view('', 400);
+            return $this->view('', 200);
         }
 
         return $this->view('', 200);
