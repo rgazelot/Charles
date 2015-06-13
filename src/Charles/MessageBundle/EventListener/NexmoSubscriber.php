@@ -8,6 +8,9 @@ use GuzzleHttp\ClientInterface as Guzzle;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
+use Charles\UserBundle\EventListener\UserEvents,
+    Charles\UserBundle\EventListener\UserEvent;
+
 class NexmoSubscriber implements EventSubscriberInterface
 {
     private $guzzle;
@@ -30,6 +33,7 @@ class NexmoSubscriber implements EventSubscriberInterface
     {
         return [
             MessageEvents::MESSAGE_CREATED => 'onMessageCreated',
+            UserEvents::USER_CREATED => 'onUserCreated',
         ];
     }
 
@@ -50,6 +54,40 @@ class NexmoSubscriber implements EventSubscriberInterface
                 'to' => $message->getReplyTo()->getIdentifier(),
                 'type' => 'text',
                 'text' => $message->getContent(),
+            ],
+        ];
+
+        try {
+            $clientRequest = $this->guzzle->createRequest(
+                'POST',
+                'https://rest.nexmo.com/sms/json',
+                $options
+            );
+
+            return $this->guzzle->send($clientRequest);
+            // Catch all Guzzle\Request exceptions
+        } catch (Exception $e) {
+
+        }
+    }
+
+    public function onUserCreated(UserEvent $event)
+    {
+        if (null === $this->nexmoApiNumber || null === $this->nexmoApiKey || null === $this->nexmoApiSecret) {
+            return;
+        }
+
+        $user = $event->getUser();
+
+        $options = [
+            'headers' => ['Content-Type' => 'application/x-www-form-urlencoded', 'Accept' => 'application/json'],
+            'query'   => [
+                'api_key' => $this->nexmoApiKey,
+                'api_secret' => $this->nexmoApiSecret,
+                'from' => $this->nexmoApiNumber,
+                'to' => $user->getIdentifier(),
+                'type' => 'text',
+                'text' => "Bonjour, Je suis Charles votre nouvel assistant personnel. Afin de faciliter l’utilisation de notre service, merci de bien vouloir compléter notre formulaire d’inscription à cette adresse : http://google.fr",
             ],
         ];
 

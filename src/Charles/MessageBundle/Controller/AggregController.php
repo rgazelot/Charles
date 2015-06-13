@@ -7,6 +7,8 @@ use Symfony\Component\HttpFoundation\Request,
 
 use Charles\ApiBundle\Controller\Controller,
     Charles\MessageBundle\Entity\Message,
+    Charles\UserBundle\EventListener\UserEvents,
+    Charles\UserBundle\EventListener\UserEvent,
     Charles\UserBundle\Exception\UserNotFoundException;
 
 class AggregController extends Controller
@@ -28,6 +30,8 @@ class AggregController extends Controller
                     'phone' => null,
                     'identifier' => $request->query->get('msisdn'),
                 ]);
+
+                $this->get('event_dispatcher')->dispatch(UserEvents::USER_CREATED, new UserEvent($user));
             } catch(FormNotValidException $e) {
                 return $this->view($e->getForm());
             }
