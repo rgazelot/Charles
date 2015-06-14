@@ -17,6 +17,11 @@ monolog:
             type:   stream
             path:   "%kernel.logs_dir%/%kernel.environment%.log"
             level:  debug
+        applog:
+            type: stream
+            path: "%kernel.logs_dir%/%kernel.environment%_nexmo.log"
+            level: info
+            channels: "nexmo"
         console:
             type:   console
             bubble: false

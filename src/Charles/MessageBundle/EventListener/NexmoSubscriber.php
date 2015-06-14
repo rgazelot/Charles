@@ -4,6 +4,9 @@ namespace Charles\MessageBundle\EventListener;
 
 use Exception;
 
+use Psr\Log\LoggerInterface,
+    Psr\Log\NullLogger;
+
 use GuzzleHttp\ClientInterface as Guzzle;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -17,13 +20,15 @@ class NexmoSubscriber implements EventSubscriberInterface
     private $nexmoApiNumber;
     private $nexmoApiKey;
     private $nexmoApiSecret;
+    private $logger;
 
-    public function __construct(Guzzle $guzzle, $nexmoApiNumber = null, $nexmoApiKey = null, $nexmoApiSecret = null)
+    public function __construct(Guzzle $guzzle, $nexmoApiNumber = null, $nexmoApiKey = null, $nexmoApiSecret = null, LoggerInterface $logger = null)
     {
         $this->guzzle = $guzzle;
         $this->nexmoApiNumber = $nexmoApiNumber;
         $this->nexmoApiKey = $nexmoApiKey;
         $this->nexmoApiSecret = $nexmoApiSecret;
+        $this->logger = null !== $logger ? $logger : new NullLogger;
     }
 
     /**
@@ -64,10 +69,12 @@ class NexmoSubscriber implements EventSubscriberInterface
                 $options
             );
 
-            return $this->guzzle->send($clientRequest);
+            $response =  $this->guzzle->send($clientRequest);
+            $this->logger->info('message_sent', ['response' => $response->json()]);
+
             // Catch all Guzzle\Request exceptions
         } catch (Exception $e) {
-
+            $this->logger->info('message_not_sent');
         }
     }
 
@@ -78,6 +85,7 @@ class NexmoSubscriber implements EventSubscriberInterface
         }
 
         $user = $event->getUser();
+        $text = "Bonjour, Je suis Charles votre nouvel assistant personnel. Afin de faciliter l'utilisation de notre service, merci de bien vouloir compléter notre formulaire d’inscription à cette adresse : http://google.fr";
 
         $options = [
             'headers' => ['Content-Type' => 'application/x-www-form-urlencoded', 'Accept' => 'application/json'],
@@ -87,7 +95,7 @@ class NexmoSubscriber implements EventSubscriberInterface
                 'from' => $this->nexmoApiNumber,
                 'to' => $user->getIdentifier(),
                 'type' => 'text',
-                'text' => "Bonjour, Je suis Charles votre nouvel assistant personnel. Afin de faciliter l’utilisation de notre service, merci de bien vouloir compléter notre formulaire d’inscription à cette adresse : http://google.fr",
+                'text' => $text,
             ],
         ];
 
@@ -98,10 +106,12 @@ class NexmoSubscriber implements EventSubscriberInterface
                 $options
             );
 
-            return $this->guzzle->send($clientRequest);
+            $response = $this->guzzle->send($clientRequest);
+            $this->logger->info('message_sent', ['response' => $response->json()]);
+
             // Catch all Guzzle\Request exceptions
         } catch (Exception $e) {
-
+            $this->logger->info('message_not_sent');
         }
     }
 }

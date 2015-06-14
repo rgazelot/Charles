@@ -17,7 +17,10 @@
             <argument>%nexmo_api_number%</argument>
             <argument>%nexmo_api_key%</argument>
             <argument>%nexmo_api_secret%</argument>
+            <argument type="service" id="logger" />
+
             <tag name="kernel.event_subscriber" />
+            <tag name="monolog.logger" channel="nexmo" />
         </service>
     </services>
 
