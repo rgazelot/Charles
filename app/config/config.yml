@@ -88,3 +88,11 @@ fos_rest:
             json: ['application/json', 'application/x-json', 'application/vnd.example-com.foo+json']
         jsonp_handler: ~
         view_response_listener: 'force'
+
+monolog:
+    handlers:
+        nexmo:
+            type: stream
+            path: "%kernel.logs_dir%/%kernel.environment%_nexmo.log"
+            level: info
+            channels: "nexmo"
