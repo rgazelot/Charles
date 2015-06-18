@@ -10,7 +10,6 @@ class MessageControllerTest extends WebTestCase
     {
         $data = [
             "content" => "An admin answer",
-            "source" => "app",
         ];
 
         $client = static::createClient([], ['HTTP_HOST' => "api.charles.dev"]);
@@ -28,7 +27,6 @@ class MessageControllerTest extends WebTestCase
     {
         $data = [
             "content" => null,
-            "source" => "app",
         ];
 
         $client = static::createClient([], ['HTTP_HOST' => "api.charles.dev"]);
@@ -47,7 +45,6 @@ class MessageControllerTest extends WebTestCase
     {
         $data = [
             "content" => "My answer",
-            "source" => "app",
         ];
 
         $client = static::createClient([], ['HTTP_HOST' => "api.charles.dev"]);

@@ -20,7 +20,7 @@ class AggregControllerTest extends WebTestCase
         $client = static::createClient([], ['HTTP_HOST' => "api.charles.dev"]);
         $client->request('GET', '/api/1/messages/aggreg', $data, [], ['CONTENT_TYPE' => 'application/json', 'HTTP_ACCEPT'  => 'application/json']);
 
-        $this->assertEquals(400, $client->getResponse()->getStatusCode());
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $this->assertEquals('', json_decode($client->getResponse()->getContent()));
     }
 

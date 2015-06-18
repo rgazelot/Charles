@@ -27,12 +27,12 @@ class Message
         return $this->em->getRepository('CharlesMessageBundle:Message')->findByUser($user);
     }
 
-    public function create(array $data, User $author, User $replyTo = null)
+    public function create(array $data, User $author, User $replyTo = null, $source = 'app')
     {
         $message = new MessageEntity;
         $message->setAuthor($author);
         $message->setReplyTo($replyTo);
-        $message->setSource(isset($data['source']) ? $data['source'] : null);
+        $message->setSource($source);
 
         $form = $this->formFactory->create(new MessageType, $message, ['allow_extra_fields' => true]);
         $form->submit($data);

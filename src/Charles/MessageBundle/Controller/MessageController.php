@@ -24,7 +24,7 @@ class MessageController extends Controller
         $user = $this->get('charles.user')->get($id);
 
         try {
-            $message = $this->get('charles.message')->create($request->request->all(), $this->getUser(), $user);
+            $message = $this->get('charles.message')->create($request->request->all(), $this->getUser(), $user, 'app');
         } catch(FormNotValidException $e) {
             return $this->view($e->getForm());
         }
