@@ -22,7 +22,8 @@
         "incenteev/composer-parameter-handler": "~2.0",
         "jms/serializer-bundle": "0.13.*",
         "friendsofsymfony/rest-bundle": "~1.4",
-        "guzzlehttp/guzzle": "~4.1"
+        "guzzlehttp/guzzle": "~4.1",
+        "predis/predis":"~1.0"
     },
     "require-dev": {
         "sensio/generator-bundle": "~2.3",

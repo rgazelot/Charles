@@ -14,5 +14,7 @@
             <argument type="service" id="doctrine.orm.entity_manager" />
             <argument type="service" id="security.context" />
         </service>
+
+        <service id="redis" class="Predis\Client"></service>
     </services>
 </container>
