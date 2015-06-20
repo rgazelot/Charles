@@ -37,14 +37,14 @@ class NexmoSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            MessageEvents::MESSAGE_CREATED => 'onMessageCreated',
-            UserEvents::USER_CREATED => 'onUserCreated',
+            //MessageEvents::MESSAGE_CREATED => 'onMessageCreated',
+            //UserEvents::USER_CREATED => 'onUserCreated',
         ];
     }
 
     public function onMessageCreated(MessageEvent $event)
     {
-        if ('sms' === $event->getMessage() || null === $this->nexmoApiNumber || null === $this->nexmoApiKey || null === $this->nexmoApiSecret) {
+        if ('sms' === $event->getMessage()->getSource() || null === $this->nexmoApiNumber || null === $this->nexmoApiKey || null === $this->nexmoApiSecret) {
             return;
         }
 

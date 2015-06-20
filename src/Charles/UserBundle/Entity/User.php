@@ -110,13 +110,6 @@ class User implements UserInterface
     private $roles;
 
     /**
-     * @var string $identifier
-     *
-     * @ORM\Column(name="identifier", unique=true, type="string", nullable=true)
-     */
-    private $identifier;
-
-    /**
      * @var DateTime $createdAt
      *
      * @ORM\Column(name="createdAt", type="datetime")
@@ -339,18 +332,6 @@ class User implements UserInterface
     public function getMessages()
     {
         return $this->messages;
-    }
-
-    public function setIdentifier($identifier)
-    {
-        $this->identifier = $identifier;
-
-        return $this;
-    }
-
-    public function getIdentifier()
-    {
-        return $this->identifier;
     }
 
     public function getRoles()
