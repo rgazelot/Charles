@@ -96,3 +96,8 @@ monolog:
             path: "%kernel.logs_dir%/%kernel.environment%_nexmo.log"
             level: info
             channels: "nexmo"
+        twilio:
+            type: stream
+            path: "%kernel.logs_dir%/%kernel.environment%_twilio.log"
+            level: info
+            channels: "twilio"
