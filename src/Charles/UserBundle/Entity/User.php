@@ -106,6 +106,15 @@ class User implements UserInterface
     private $lastMessage;
 
     /**
+     * @var DateTime $lastMessagesViewed
+     *
+     * @ORM\Column(name="lastMessagesViewed", type="datetime", nullable=true)
+     *
+     * @Expose
+     */
+    private $lastMessagesViewed;
+
+    /**
      * @ORM\OneToMany(targetEntity="Charles\MessageBundle\Entity\Message", mappedBy="author")
      */
     private $messages;
@@ -214,6 +223,18 @@ class User implements UserInterface
     public function getLastMessage()
     {
         return $this->lastMessage;
+    }
+
+    public function setLastMessagesViewed(DateTime $lastMessagesViewed)
+    {
+        $this->lastMessagesViewed = $lastMessagesViewed;
+
+        return $this;
+    }
+
+    public function getLastMessagesViewed()
+    {
+        return $this->lastMessagesViewed;
     }
 
     /**

@@ -72,7 +72,7 @@ class MessageControllerTest extends WebTestCase
         $this->assertEquals(404, $client->getResponse()->getStatusCode());
     }
 
-    public function testgetMessage()
+    public function testgetUserMessages()
     {
         $client = static::createClient([], ['HTTP_HOST' => "api.charles.dev"]);
         $client->request('GET', '/api/1/users/4/messages', [], [], [

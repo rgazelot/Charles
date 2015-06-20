@@ -2,6 +2,8 @@
 
 namespace Charles\MessageBundle\Controller;
 
+use DateTime;
+
 use Symfony\Component\HttpFoundation\Request;
 
 use Charles\ApiBundle\Controller\Controller,
@@ -15,6 +17,9 @@ class MessageController extends Controller
     {
         $user = $this->get('charles.user')->get($id);
         $messages = $this->get('charles.message')->findByUser($user);
+
+        $user->setLastMessagesViewed(new DateTime);
+        $this->get('doctrine.orm.entity_manager')->flush($user);
 
         return $this->view($messages, 200);
     }
