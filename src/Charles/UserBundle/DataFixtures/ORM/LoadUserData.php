@@ -63,6 +63,16 @@ class LoadUserData extends AbstractFixture implements OrderedFixtureInterface, C
         $manager->persist($user);
         $this->setReference('user.get_messages.user', $user);
 
+        $user = new User;
+        $user->setEmail('testEdit@charles.com');
+        $user->setPassword('pass');
+        $user->setToken('testEditToken');
+        $user->setPhone('0601010101');
+        $user->setIdentifier('testEdit');
+        $userApi->encodePassword($user);
+        $manager->persist($user);
+        $this->setReference('user.edit_messages', $user);
+
         $manager->flush();
     }
 

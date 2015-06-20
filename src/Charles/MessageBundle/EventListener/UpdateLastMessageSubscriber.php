@@ -36,6 +36,7 @@ class UpdateLastMessageSubscriber implements EventSubscriberInterface
         $author = $message->getAuthor();
         $author->setLastMessage($message->getCreatedAt());
 
-        $this->em->flush($author);
+        $this->em->persist($author);
+        $this->em->flush();
     }
 }

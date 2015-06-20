@@ -86,6 +86,29 @@ class User
         return $user;
     }
 
+    public function edit(UserEntity $user, array $data = [])
+    {
+        $previousEmail = $user->getEmail();
+
+        $form = $this->formFactory->create(new UserType, $user, ['allow_extra_fields' => true]);
+        $form->submit($data, false);
+
+        if (!$form->isValid()) {
+            throw new FormNotValidException($form);
+        }
+
+        if ($previousEmail !== $user->getEmail()) {
+            try {
+                $this->findByEmail($user->getEmail());
+
+                throw new EmailAlreadyUsedException;
+            } catch(UserNotFoundException $e) {}
+        }
+
+        $this->em->persist($user);
+        $this->em->flush();
+    }
+
     public function encodePassword(UserEntity $user)
     {
         $user->setPassword($this->encoder->getEncoder($user)->encodePassword($user->getPassword(), $user->getSalt()));

@@ -44,6 +44,24 @@ class User implements UserInterface
     private $password;
 
     /**
+     * @var string $firstname
+     *
+     * @ORM\Column(name="firstname", type="string", nullable=true)
+     *
+     * @Expose
+     */
+    private $firstname;
+
+    /**
+     * @var string $firstname
+     *
+     * @ORM\Column(name="lastname", type="string", nullable=true)
+     *
+     * @Expose
+     */
+    private $lastname;
+
+    /**
      * @var string $email
      *
      * @ORM\Column(name="email", unique=true, type="string", length=150, nullable=true)
@@ -62,6 +80,17 @@ class User implements UserInterface
      * @Expose
      */
     private $phone;
+
+    /**
+     * @var string $gender
+     *
+     * @ORM\Column(name="gender", type="string", nullable=true)
+     *
+     * @Assert\Choice(choices = {"male", "female"}, message = "Choose a valid gender.")
+     *
+     * @Expose
+     */
+    private $gender;
 
     /**
      * @var string $token
@@ -97,6 +126,42 @@ class User implements UserInterface
     private $createdAt;
 
     /**
+     * @var string $address
+     *
+     * @ORM\Column(name="address", type="string", nullable=true)
+     *
+     * @Expose
+     */
+    private $address;
+
+    /**
+     * @var string $zip
+     *
+     * @ORM\Column(name="zip", type="string", nullable=true)
+     *
+     * @Expose
+     */
+    private $zip;
+
+    /**
+     * @var string $city
+     *
+     * @ORM\Column(name="city", type="string", nullable=true)
+     *
+     * @Expose
+     */
+    private $city;
+
+    /**
+     * @var string $country
+     *
+     * @ORM\Column(name="country", type="string", nullable=true)
+     *
+     * @Expose
+     */
+    private $country;
+
+    /**
      * @var DateTime $lastMessage
      *
      * @ORM\Column(name="lastMessage", type="datetime", nullable=true)
@@ -113,6 +178,24 @@ class User implements UserInterface
      * @Expose
      */
     private $lastMessagesViewed;
+
+    /**
+     * @var string $budget
+     *
+     * @ORM\Column(name="budget", type="float", nullable=true)
+     *
+     * @Expose
+     */
+    private $budget;
+
+    /**
+     * @var string $informations
+     *
+     * @ORM\Column(name="informations", type="text", nullable=true)
+     *
+     * @Expose
+     */
+    private $informations;
 
     /**
      * @ORM\OneToMany(targetEntity="Charles\MessageBundle\Entity\Message", mappedBy="author")
@@ -136,6 +219,35 @@ class User implements UserInterface
     public function getId()
     {
         return $this->id;
+    }
+
+    public function setFirstname($firstname)
+    {
+        $this->firstname = $firstname;
+
+        return $this;
+    }
+
+    public function getFirstname()
+    {
+        return $this->firstname;
+    }
+
+    public function setLastname($lastname)
+    {
+        $this->lastname = $lastname;
+
+        return $this;
+    }
+
+    public function getLastname()
+    {
+        return $this->lastname;
+    }
+
+    public function getName()
+    {
+        return $this->firstname . ' ' . $this->lastname;
     }
 
     public function setEmail($email)
@@ -172,6 +284,30 @@ class User implements UserInterface
         $this->phone = $phone;
 
         return $this;
+    }
+
+    public function setGender($gender)
+    {
+        $this->gender = $gender;
+
+        return $this;
+    }
+
+    public function getGender()
+    {
+        return $this->gender;
+    }
+
+    public function setBudget($budget)
+    {
+        $this->budget = $budget;
+
+        return $budget;
+    }
+
+    public function getBudget()
+    {
+        return $this->budget;
     }
 
     public function getPhone()
@@ -213,6 +349,54 @@ class User implements UserInterface
         return $this->token;
     }
 
+    public function setAddress($address)
+    {
+        $this->address = $address;
+
+        return $this;
+    }
+
+    public function getAddress()
+    {
+        return $this->address;
+    }
+
+    public function setZip($zip)
+    {
+        $this->zip = $zip;
+
+        return $zip;
+    }
+
+    public function getZip()
+    {
+        return $this->zip;
+    }
+
+    public function setCity($city)
+    {
+        $this->city = $city;
+
+        return $this;
+    }
+
+    public function getCity()
+    {
+        return $this->city;
+    }
+
+    public function setCountry($country)
+    {
+        $this->country = $country;
+
+        return $this;
+    }
+
+    public function getCountry()
+    {
+        return $this->country;
+    }
+
     public function setLastMessage(DateTime $lastMessage)
     {
         $this->lastMessage = $lastMessage;
@@ -235,6 +419,18 @@ class User implements UserInterface
     public function getLastMessagesViewed()
     {
         return $this->lastMessagesViewed;
+    }
+
+    public function setInformations($informations)
+    {
+        $this->informations = $informations;
+
+        return $this;
+    }
+
+    public function getInformations()
+    {
+        return $this->informations;
     }
 
     /**

@@ -38,4 +38,17 @@ class UserController extends Controller
 
         return $this->view($user, 201);
     }
+
+    public function patchUserAction(Request $request, $id)
+    {
+        try {
+            $user = $this->get('charles.user')->get($id);
+        } catch(UserNotFoundException $e) {
+            return $this->view(['error' => ['code' => 'user_not_found', 'message' => $e->getMessage()]], 404);
+        }
+
+        $this->get('charles.user')->edit($user, $request->request->all());
+
+        return $this->view($user, 200);
+    }
 }
