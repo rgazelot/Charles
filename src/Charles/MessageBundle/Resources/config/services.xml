@@ -22,6 +22,11 @@
             <tag name="kernel.event_subscriber" />
             <tag name="monolog.logger" channel="nexmo" />
         </service>
+
+        <service id="charles.last.message.subscriber" class="Charles\MessageBundle\EventListener\UpdateLastMessageSubscriber">
+            <argument type="service" id="doctrine.orm.entity_manager" />
+            <tag name="kernel.event_subscriber" />
+        </service>
     </services>
 
 </container>

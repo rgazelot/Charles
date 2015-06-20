@@ -7,6 +7,8 @@ use Symfony\Component\HttpFoundation\Request,
 
 use Charles\ApiBundle\Controller\Controller,
     Charles\MessageBundle\Entity\Message,
+    Charles\MessageBundle\EventListener\MessageEvents,
+    Charles\MessageBundle\EventListener\MessageEvent,
     Charles\UserBundle\EventListener\UserEvents,
     Charles\UserBundle\EventListener\UserEvent,
     Charles\UserBundle\Exception\UserNotFoundException;
@@ -42,6 +44,8 @@ class AggregController extends Controller
         } catch(FormNotValidException $e) {
             return $this->view('', 200);
         }
+
+        $this->get('event_dispatcher')->dispatch(MessageEvents::MESSAGE_CREATED, new MessageEvent($message));
 
         return $this->view('', 200);
     }

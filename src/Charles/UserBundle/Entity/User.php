@@ -97,6 +97,15 @@ class User implements UserInterface
     private $createdAt;
 
     /**
+     * @var DateTime $lastMessage
+     *
+     * @ORM\Column(name="lastMessage", type="datetime", nullable=true)
+     *
+     * @Expose
+     */
+    private $lastMessage;
+
+    /**
      * @ORM\OneToMany(targetEntity="Charles\MessageBundle\Entity\Message", mappedBy="author")
      */
     private $messages;
@@ -193,6 +202,18 @@ class User implements UserInterface
     public function getToken()
     {
         return $this->token;
+    }
+
+    public function setLastMessage(DateTime $lastMessage)
+    {
+        $this->lastMessage = $lastMessage;
+
+        return $this;
+    }
+
+    public function getLastMessage()
+    {
+        return $this->lastMessage;
     }
 
     /**

@@ -134,7 +134,7 @@ class Message
 
     public function getSource()
     {
-        return $this;
+        return $this->source;
     }
 
     public function setReplyTo(User $replyTo = null)

@@ -44,7 +44,7 @@ class NexmoSubscriber implements EventSubscriberInterface
 
     public function onMessageCreated(MessageEvent $event)
     {
-        if (null === $this->nexmoApiNumber || null === $this->nexmoApiKey || null === $this->nexmoApiSecret) {
+        if ('sms' === $event->getMessage() || null === $this->nexmoApiNumber || null === $this->nexmoApiKey || null === $this->nexmoApiSecret) {
             return;
         }
 
