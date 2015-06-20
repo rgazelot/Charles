@@ -15,15 +15,17 @@ use Charles\ApiBundle\Controller\Controller,
 
 class AggregController extends Controller
 {
-    public function aggregMessagesAction(Request $request)
+    public function postMessagesTwilioAction(Request $request)
     {
         $data = [
-            'content' => str_replace('+', ' ', $request->query->get('text')),
+            'content' => $request->request->get('Body'),
             'source' => Message::SOURCE_SMS,
         ];
 
+        $this->get('monolog.logger.twilio')->info('aggreg', $request->request->all());
+
         try {
-            $user = $this->get('charles.user')->findByIdentifier($request->query->get('msisdn'));
+            $user = $this->get('charles.user')->findByPhone($request->request->get('From'));
         } catch(UserNotFoundException $e) {
             try {
                 $user = $this->get('charles.user')->create([

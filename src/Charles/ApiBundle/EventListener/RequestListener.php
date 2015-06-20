@@ -47,7 +47,7 @@ class RequestListener
     private function getWildcardRoutes()
     {
         return [
-            'api_aggreg_messages',
+            'api_post_messages_twilio',
             'api_post_authentications',
             'api_post_users',
         ];
