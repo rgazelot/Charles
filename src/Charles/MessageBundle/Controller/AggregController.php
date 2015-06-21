@@ -29,8 +29,8 @@ class AggregController extends Controller
                 $user = $this->get('charles.user')->create([
                     'email' => null,
                     'password' => null,
-                    'phone' => null,
-                    'identifier' => $request->query->get('msisdn'),
+                    'phone' => $request->request->get('From'),
+                    'via' => 'sms'
                 ]);
 
                 $this->get('event_dispatcher')->dispatch(UserEvents::USER_CREATED, new UserEvent($user));

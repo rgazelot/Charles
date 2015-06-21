@@ -198,6 +198,15 @@ class User implements UserInterface
     private $informations;
 
     /**
+     * @var string $via
+     *
+     * @ORM\Column(name="via", type="string")
+     *
+     * @Assert\Choice(choices = {"web", "sms"}, message = "Choose a valid via.")
+     */
+    private $via;
+
+    /**
      * @ORM\OneToMany(targetEntity="Charles\MessageBundle\Entity\Message", mappedBy="author")
      */
     private $messages;
@@ -260,6 +269,18 @@ class User implements UserInterface
     public function getEmail()
     {
         return $this->email;
+    }
+
+    public function setVia($via)
+    {
+        $this->via = $via;
+
+        return $this;
+    }
+
+    public function getVia()
+    {
+        return $this->via;
     }
 
     public function getCreatedAt()

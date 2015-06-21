@@ -21,6 +21,7 @@ class UserType extends AbstractType
             ->add('city')
             ->add('country')
             ->add('gender')
+            ->add('via')
             ->add('informations')
             ->add('budget')
             ->add('identifier');
