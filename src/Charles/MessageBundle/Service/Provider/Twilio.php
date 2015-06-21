@@ -38,8 +38,8 @@ class Twilio extends Base
         try {
             $message = $this->account->messages->create(array(
                 "From" => $this->from,
-                "To" => "+33676781891",
-                "Body" => "Test message!",
+                "To" => $to,
+                "Body" => $body,
             ));
         } catch(\Services_Twilio_RestException $e) {
             $this->logger->warning('error', [
