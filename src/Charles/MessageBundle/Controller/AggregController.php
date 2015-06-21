@@ -63,7 +63,7 @@ class AggregController extends Controller
             $this->get('monolog.logger.twilio')->critical('message_not_found', $request->request->all());
         }
 
-        $message->setProvider($request->request->get('MessageStatus'));
+        $message->setStatus($request->request->get('MessageStatus'));
 
         $em = $this->get('doctrine.orm.entity_manager');
         $em->persist($message);

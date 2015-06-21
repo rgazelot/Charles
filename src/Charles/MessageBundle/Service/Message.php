@@ -25,6 +25,11 @@ class Message
         $this->em = $em;
     }
 
+    /**
+     * @param $providerId
+     *
+     * @return \Charles\MessageBundle\Entity\Message
+     */
     public function findByProviderId($providerId)
     {
         try {
