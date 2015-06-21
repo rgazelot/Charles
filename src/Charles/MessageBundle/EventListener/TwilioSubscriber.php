@@ -8,6 +8,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 use Charles\MessageBundle\Exception\TwilioException,
     Charles\MessageBundle\Service\Provider\Twilio,
+    Charles\MessageBundle\Service\Message,
     Charles\UserBundle\EventListener\UserEvents,
     Charles\UserBundle\EventListener\UserEvent;
 
@@ -16,10 +17,11 @@ class TwilioSubscriber implements EventSubscriberInterface
     private $twilio;
     private $em;
 
-    public function __construct(Twilio $twilio, EntityManager $em)
+    public function __construct(Twilio $twilio, EntityManager $em, Message $messageApi)
     {
         $this->twilio = $twilio;
         $this->em = $em;
+        $this->messageApi = $messageApi;
     }
 
     /**
@@ -60,6 +62,11 @@ class TwilioSubscriber implements EventSubscriberInterface
         }
 
         $user = $event->getUser();
+        $charles = $this->em->getRepository('CharlesUserBundle:User')->findByEmail('welcome@merci-charles.fr');
+
+        if (null === $charles) {
+            return;
+        }
 
         switch($user->getVia())
         {
@@ -73,10 +80,17 @@ class TwilioSubscriber implements EventSubscriberInterface
                 break;
         }
 
-        try {
-            $this->twilio->create($user->getPhone(), $text);
-        } catch(TwilioException $e) {
+        $message = $this->messageApi->create(['content' => $text], $charles, $user, 'app');
 
+        try {
+            $return = $this->twilio->create($user->getPhone(), $message->getContent());
+        } catch(TwilioException $e) {
+            return;
         }
+
+        $message->setProviderId($return->sid);
+
+        $this->em->persist($message);
+        $this->em->flush();
     }
 }
