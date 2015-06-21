@@ -4,10 +4,13 @@ namespace Charles\MessageBundle\Service;
 
 use Doctrine\ORM\EntityManager;
 
+use Doctrine\ORM\NoResultException;
+
 use Symfony\Component\Form\FormFactory;
 
 use Charles\ApiBundle\Exception\FormNotValidException,
     Charles\MessageBundle\Form\MessageType,
+    Charles\MessageBundle\Exception\MessageNotFoundException,
     Charles\MessageBundle\Entity\Message as MessageEntity,
     Charles\UserBundle\Entity\User;
 
@@ -20,6 +23,15 @@ class Message
     {
         $this->formFactory = $formFactory;
         $this->em = $em;
+    }
+
+    public function findByProviderId($providerId)
+    {
+        try {
+            return $this->em->getRepository('CharlesMessageBundle:Message')->findByProviderId($providerId);
+        } catch(NoResultException $e) {
+            throw new MessageNotFoundException;
+        }
     }
 
     public function findByUser(User $user)
