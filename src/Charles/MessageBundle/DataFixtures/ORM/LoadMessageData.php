@@ -23,6 +23,7 @@ class LoadMessageData extends AbstractFixture implements OrderedFixtureInterface
         $message->setAuthor($author);
         $message->setContent('My question');
         $message->setSource('sms');
+        $message->setStatus(Message::STATUS_DELIVRED);
         $message->setCreatedAt(new DateTime('2015-01-01', new DateTimeZone('UTC')));
         $manager->persist($message);
 
@@ -30,6 +31,7 @@ class LoadMessageData extends AbstractFixture implements OrderedFixtureInterface
         $message->setAuthor($user);
         $message->setContent('My question');
         $message->setSource('sms');
+        $message->setStatus(Message::STATUS_DELIVRED);
         $message->setCreatedAt(new DateTime('2015-01-01T00:00:00', new DateTimeZone('UTC')));
         $manager->persist($message);
 
@@ -38,6 +40,7 @@ class LoadMessageData extends AbstractFixture implements OrderedFixtureInterface
         $message->setReplyTo($user);
         $message->setContent('My answer');
         $message->setSource('app');
+        $message->setStatus(Message::STATUS_DELIVRED);
         $message->setCreatedAt(new DateTime('2015-01-01T01:00:00', new DateTimeZone('UTC')));
         $manager->persist($message);
 

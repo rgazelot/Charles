@@ -62,7 +62,7 @@ class TwilioSubscriber implements EventSubscriberInterface
         }
 
         $user = $event->getUser();
-        $charles = $this->em->getRepository('CharlesUserBundle:User')->findByEmail('welcome@merci-charles.fr');
+        $charles = $this->em->getRepository('CharlesUserBundle:User')->findOneByEmail('welcome@merci-charles.fr');
 
         if (null === $charles) {
             return;
