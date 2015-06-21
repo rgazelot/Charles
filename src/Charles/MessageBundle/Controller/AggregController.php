@@ -44,11 +44,11 @@ class AggregController extends Controller
         try {
             $message = $this->get('charles.message')->create($data, $user, null, 'sms');
         } catch(FormNotValidException $e) {
-            return $this->view('', 200);
+            return $this->view('<?xml version="1.0" encoding="UTF-8" ?><Response></Response>', 200, ['Content-Type' => 'application/xml']);
         }
 
         $this->get('event_dispatcher')->dispatch(MessageEvents::MESSAGE_CREATED, new MessageEvent($message));
 
-        return $this->view('', 200);
+        return $this->view('<?xml version="1.0" encoding="UTF-8" ?><Response></Response>', 200, ['Content-Type' => 'application/xml']);
     }
 }
