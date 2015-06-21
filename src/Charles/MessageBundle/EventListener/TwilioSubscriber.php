@@ -59,7 +59,7 @@ class TwilioSubscriber implements EventSubscriberInterface
 
                 break;
             case 'web':
-                $text = "Bonjour";
+                $text = sprintf("Bonjour %s, je suis Charles, votre nouvel assistant personnel. Je vous remercie de m’accorder votre confiance pour vous accompagner au quotidien. Je suis à votre disposition gratuitement pendant 15 jours, n’hésitez pas à me solliciter. A bientôt, Charles.", $user->getFirstname());
 
                 break;
         }
