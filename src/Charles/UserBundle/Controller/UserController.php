@@ -47,7 +47,11 @@ class UserController extends Controller
             return $this->view(['error' => ['code' => 'user_not_found', 'message' => $e->getMessage()]], 404);
         }
 
-        $this->get('charles.user')->edit($user, $request->request->all());
+        try {
+            $this->get('charles.user')->edit($user, $request->request->all());
+        } catch(FormNotValidException $e) {
+            return $this->view($e->getForm(), 400);
+        }
 
         return $this->view($user, 200);
     }
