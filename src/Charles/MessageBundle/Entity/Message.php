@@ -48,7 +48,7 @@ class Message
     /**
      * @var string $content
      *
-     * @ORM\Column(name="content", type="string")
+     * @ORM\Column(name="content", type="text")
      *
      * @Assert\NotNull()
      * @Assert\NotBlank()
