@@ -2,6 +2,8 @@
 
 namespace Charles\MessageBundle\EventListener;
 
+use Doctrine\ORM\EntityManager;
+
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 use Charles\MessageBundle\Exception\TwilioException,
@@ -12,10 +14,12 @@ use Charles\MessageBundle\Exception\TwilioException,
 class TwilioSubscriber implements EventSubscriberInterface
 {
     private $twilio;
+    private $em;
 
-    public function __construct(Twilio $twilio)
+    public function __construct(Twilio $twilio, EntityManager $em)
     {
         $this->twilio = $twilio;
+        $this->em = $em;
     }
 
     /**
@@ -38,10 +42,15 @@ class TwilioSubscriber implements EventSubscriberInterface
         }
 
         try {
-            $this->twilio->create('+33676781891', 'test');
+            $return = $this->twilio->create($message->getReplyTo()->getPhone(), $message->getContent());
         } catch(TwilioException $e) {
-
+            return;
         }
+
+        $message->setProviderId($return->sid);
+
+        $this->em->persist($message);
+        $this->em->flush();
     }
 
     public function onUserCreated(UserEvent $event)

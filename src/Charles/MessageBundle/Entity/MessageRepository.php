@@ -25,4 +25,13 @@ class MessageRepository extends EntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function findByProviderId($providerId)
+    {
+        return $this->createQueryBuilder('m')
+            ->where('m.providerId = :providerId')
+                ->setParameter('providerId', $providerId)
+            ->getQuery()
+            ->getSingleResult();
+    }
 }

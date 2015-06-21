@@ -40,6 +40,7 @@ class Twilio extends Base
                 "From" => $this->from,
                 "To" => $to,
                 "Body" => $body,
+                "StatusCallback" => "http://api.merci-charles.fr/api/1/messages/twilios/callbacks",
             ));
         } catch(\Services_Twilio_RestException $e) {
             $this->logger->warning('error', [

@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Request,
 
 use Charles\ApiBundle\Controller\Controller,
     Charles\MessageBundle\Entity\Message,
+    Charles\MessageBundle\Exception\MessageNotFoundException,
     Charles\MessageBundle\EventListener\MessageEvents,
     Charles\MessageBundle\EventListener\MessageEvent,
     Charles\UserBundle\EventListener\UserEvents,
@@ -50,5 +51,22 @@ class AggregController extends Controller
         $this->get('event_dispatcher')->dispatch(MessageEvents::MESSAGE_CREATED, new MessageEvent($message));
 
         return $this->view('<?xml version="1.0" encoding="UTF-8" ?><Response></Response>', 200, ['Content-Type' => 'application/xml']);
+    }
+
+    public function postMessagesTwilioCallbackAction(Request $request)
+    {
+        $this->get('monolog.logger.twilio')->info('callback', $request->request->all());
+
+        try {
+            $message = $this->get('charles.message')->findByProviderId($request->request->get('MessageSid'));
+        } catch(MessageNotFoundException $e) {
+            $this->get('monolog.logger.twilio')->critical('message_not_found', $request->request->all());
+        }
+
+        $message->setStatus($request->request->get('MessageStatus'));
+
+        $em = $this->get('doctrine.orm.entity_manager');
+        $em->persist($message);
+        $em->flush();
     }
 }

@@ -4,10 +4,13 @@ namespace Charles\MessageBundle\Service;
 
 use Doctrine\ORM\EntityManager;
 
+use Doctrine\ORM\NoResultException;
+
 use Symfony\Component\Form\FormFactory;
 
 use Charles\ApiBundle\Exception\FormNotValidException,
     Charles\MessageBundle\Form\MessageType,
+    Charles\MessageBundle\Exception\MessageNotFoundException,
     Charles\MessageBundle\Entity\Message as MessageEntity,
     Charles\UserBundle\Entity\User;
 
@@ -22,6 +25,20 @@ class Message
         $this->em = $em;
     }
 
+    /**
+     * @param $providerId
+     *
+     * @return \Charles\MessageBundle\Entity\Message
+     */
+    public function findByProviderId($providerId)
+    {
+        try {
+            return $this->em->getRepository('CharlesMessageBundle:Message')->findByProviderId($providerId);
+        } catch(NoResultException $e) {
+            throw new MessageNotFoundException;
+        }
+    }
+
     public function findByUser(User $user)
     {
         return $this->em->getRepository('CharlesMessageBundle:Message')->findByUser($user);
@@ -33,6 +50,7 @@ class Message
         $message->setAuthor($author);
         $message->setReplyTo($replyTo);
         $message->setSource($source);
+        $message->setStatus(MessageEntity::STATUS_QUEUED);
 
         $form = $this->formFactory->create(new MessageType, $message, ['allow_extra_fields' => true]);
         $form->submit($data);

@@ -48,6 +48,7 @@ class RequestListener
     {
         return [
             'api_post_messages_twilio',
+            'api_post_messages_twilio_callback',
             'api_post_authentications',
             'api_post_users',
         ];
