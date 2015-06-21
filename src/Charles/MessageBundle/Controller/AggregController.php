@@ -51,4 +51,9 @@ class AggregController extends Controller
 
         return $this->view('<?xml version="1.0" encoding="UTF-8" ?><Response></Response>', 200, ['Content-Type' => 'application/xml']);
     }
+
+    public function postMessagesTwilioCallbackAction(Request $request)
+    {
+        $this->get('monolog.logger.twilio')->info('callback', $request->request->all());
+    }
 }

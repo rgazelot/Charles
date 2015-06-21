@@ -25,6 +25,7 @@
 
         <service id="charles.twilio.subscriber" class="Charles\MessageBundle\EventListener\TwilioSubscriber">
             <argument type="service" id="twilio" />
+            <argument type="service" id="doctrine.orm.entity_manager" />
 
             <tag name="kernel.event_subscriber" />
         </service>

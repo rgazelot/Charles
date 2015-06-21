@@ -26,6 +26,14 @@ class Message
     const SOURCE_SMS = 'sms';
     const SOURCE_APP = 'app';
 
+    const STATUS_QUEUED = 'queued';
+    const STATUS_SENDING = 'sending';
+    const STATUS_RECEIVING = 'receiving';
+    const STATUS_FAILED = 'failed';
+    const STATUS_SENT = 'sent';
+    const STATUS_DELIVRED = 'delivered';
+    const STATUS_UNDELIVERED = 'undelivered';
+
     /**
      * @var integer $id
      *
@@ -61,6 +69,25 @@ class Message
      * @Expose
      */
     private $source;
+
+    /**
+     * @var string $status
+     *
+     * @ORM\Column(name="status", type="string")
+     *
+     * @Assert\NotNull()
+     * @Assert\NotBlank()
+     *
+     * @Expose
+     */
+    private $status;
+
+    /**
+     * @var string $providerId
+     *
+     * @ORM\Column(name="providerId", type="string", nullable=true)
+     */
+    private $providerId;
 
     /**
      * @var DateTime $createdAt
@@ -159,5 +186,29 @@ class Message
     public function getCreatedAt()
     {
         return $this->createdAt;
+    }
+
+    public function setStatus($status)
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    public function setProviderId($providerId)
+    {
+        $this->providerId = $providerId;
+
+        return $this;
+    }
+
+    public function getProviderId()
+    {
+        return $this->providerId;
     }
 }

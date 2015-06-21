@@ -33,6 +33,7 @@ class Message
         $message->setAuthor($author);
         $message->setReplyTo($replyTo);
         $message->setSource($source);
+        $message->setStatus(MessageEntity::STATUS_QUEUED);
 
         $form = $this->formFactory->create(new MessageType, $message, ['allow_extra_fields' => true]);
         $form->submit($data);
