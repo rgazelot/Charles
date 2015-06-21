@@ -12,7 +12,7 @@
             <argument type="service" id="doctrine.orm.entity_manager" />
         </service>
 
-        <service id="charles.message.subscriber" class="Charles\MessageBundle\EventListener\NexmoSubscriber">
+        <service id="charles.nexmo.subscriber" class="Charles\MessageBundle\EventListener\NexmoSubscriber">
             <argument type="service" id="guzzlehttp.client" />
             <argument>%nexmo_api_number%</argument>
             <argument>%nexmo_api_key%</argument>
@@ -23,9 +23,24 @@
             <tag name="monolog.logger" channel="nexmo" />
         </service>
 
+        <service id="charles.twilio.subscriber" class="Charles\MessageBundle\EventListener\TwilioSubscriber">
+            <argument type="service" id="twilio" />
+
+            <tag name="kernel.event_subscriber" />
+        </service>
+
         <service id="charles.last.message.subscriber" class="Charles\MessageBundle\EventListener\UpdateLastMessageSubscriber">
             <argument type="service" id="doctrine.orm.entity_manager" />
             <tag name="kernel.event_subscriber" />
+        </service>
+
+        <service id="twilio" class="Charles\MessageBundle\Service\Provider\Twilio">
+            <argument>%twilio_sid%</argument>
+            <argument>%twilio_token%</argument>
+            <argument>%twilio_from%</argument>
+            <argument type="service" id="logger" />
+
+            <tag name="monolog.logger" channel="twilio" />
         </service>
     </services>
 

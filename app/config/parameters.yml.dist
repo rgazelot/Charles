@@ -22,3 +22,7 @@ parameters:
     nexmo_api_number: null
     nexmo_api_key: null
     nexmo_api_secret: null
+
+    twilio_sid: null
+    twilio_token: null
+    twilio_from: null

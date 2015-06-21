@@ -43,10 +43,10 @@ class User
         return $this->em->getRepository('CharlesUserBundle:User')->all();
     }
 
-    public function findByIdentifier($identifier = null)
+    public function findByPhone($phone = null)
     {
         try {
-            return $this->em->getRepository('CharlesUserBundle:User')->findByIdentifier($identifier);
+            return $this->em->getRepository('CharlesUserBundle:User')->findByPhone($phone);
         } catch(NoResultException $e) {
             throw new UserNotFoundException;
         }

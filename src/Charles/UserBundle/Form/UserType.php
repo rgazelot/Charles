@@ -23,8 +23,7 @@ class UserType extends AbstractType
             ->add('gender')
             ->add('via')
             ->add('informations')
-            ->add('budget')
-            ->add('identifier');
+            ->add('budget');
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

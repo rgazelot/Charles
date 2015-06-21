@@ -6,10 +6,10 @@ use Doctrine\ORM\EntityRepository;
 
 class UserRepository extends EntityRepository
 {
-    public function findByIdentifier($identifier = null) {
+    public function findByPhone($phone = null) {
         return $this->createQueryBuilder('u')
-            ->where('u.identifier = :identifier')
-                ->setParameter('identifier', $identifier)
+            ->where('u.phone = :phone')
+                ->setParameter('phone', $phone)
             ->getQuery()
             ->getSingleResult();
     }
