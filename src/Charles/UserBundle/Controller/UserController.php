@@ -6,7 +6,9 @@ use Symfony\Component\HttpFoundation\Request;
 
 use Charles\ApiBundle\Controller\Controller,
     Charles\ApiBundle\Exception\FormNotValidException,
-    Charles\UserBundle\Exception\UserNotFoundException;
+    Charles\UserBundle\Exception\UserNotFoundException,
+    Charles\UserBundle\EventListener\UserEvents,
+    Charles\UserBundle\EventListener\UserEvent;
 
 class UserController extends Controller
 {
@@ -35,6 +37,8 @@ class UserController extends Controller
         } catch(FormNotValidException $e) {
             return $this->view($e->getForm(), 400);
         }
+
+        $this->get('event_dispatcher')->dispatch(UserEvents::USER_CREATED, new UserEvent($user));
 
         return $this->view($user, 201);
     }
