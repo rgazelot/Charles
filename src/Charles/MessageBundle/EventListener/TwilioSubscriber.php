@@ -25,7 +25,7 @@ class TwilioSubscriber implements EventSubscriberInterface
     {
         return [
             MessageEvents::MESSAGE_CREATED => 'onMessageCreated',
-            //UserEvents::USER_CREATED => 'onUserCreated',
+            UserEvents::USER_CREATED => 'onUserCreated',
         ];
     }
 
@@ -39,6 +39,33 @@ class TwilioSubscriber implements EventSubscriberInterface
 
         try {
             $this->twilio->create('+33676781891', 'test');
+        } catch(TwilioException $e) {
+
+        }
+    }
+
+    public function onUserCreated(UserEvent $event)
+    {
+        if (false === $this->twilio->isActive()) {
+            return;
+        }
+
+        $user = $event->getUser();
+
+        switch($user->getVia())
+        {
+            case 'sms':
+                $text = "Bonjour, Je suis Charles votre nouvel assistant personnel. Afin de faciliter l'utilisation de notre service, merci de bien vouloir compléter notre formulaire d’inscription à cette adresse : http://google.fr";
+
+                break;
+            case 'web':
+                $text = "Bonjour";
+
+                break;
+        }
+
+        try {
+            $this->twilio->create($user->getPhone(), $text);
         } catch(TwilioException $e) {
 
         }
