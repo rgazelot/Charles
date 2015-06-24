@@ -44,5 +44,7 @@ class MessageController extends Controller
         $em = $this->get('doctrine.orm.entity_manager');
         $em->remove($em->getRepository('CharlesMessageBundle:Message')->find($id));
         $em->flush();
+
+        return $this->view(null, 204);
     }
 }
