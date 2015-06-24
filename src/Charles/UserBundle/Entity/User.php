@@ -25,6 +25,10 @@ use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert,
  */
 class User implements UserInterface
 {
+    const PLAN_FREEMIUM  = "freemium";
+    const PLAN_CHARLES_5 = "charles_5";
+    const PLAN_CHARLES_7 = "charles_7";
+
     /**
      * @var integer $id
      *
@@ -86,7 +90,7 @@ class User implements UserInterface
      *
      * @ORM\Column(name="gender", type="string", nullable=true)
      *
-     * @Assert\Choice(choices = {"male", "female"}, message = "Choose a valid gender.")
+     * @Assert\Choice(choices = {"homme", "femme"}, message = "Choose a valid gender.")
      *
      * @Expose
      */
@@ -180,6 +184,15 @@ class User implements UserInterface
      * @Expose
      */
     private $budget;
+
+    /**
+     * @var string $plan
+     *
+     * @ORM\Column(name="plan", type="string", nullable=true)
+     *
+     * @Expose
+     */
+    private $plan;
 
     /**
      * @var string $informations
@@ -433,6 +446,18 @@ class User implements UserInterface
     public function getInformations()
     {
         return $this->informations;
+    }
+
+    public function setPlan($plan)
+    {
+        $this->plan = $plan;
+
+        return $this;
+    }
+
+    public function getPlan()
+    {
+        return $this->plan;
     }
 
     /**
