@@ -38,4 +38,11 @@ class MessageController extends Controller
 
         return $this->view($message, 201);
     }
+
+    public function deleteMessagesAction($id)
+    {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $em->remove($em->getRepository('CharlesMessageBundle:Message')->find($id));
+        $em->flush();
+    }
 }
