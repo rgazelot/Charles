@@ -71,7 +71,7 @@ class TwilioSubscriber implements EventSubscriberInterface
         switch($user->getVia())
         {
             case 'sms':
-                $text = sprintf("Bonjour, Je suis Charles votre nouvel assistant personnel. Afin de faciliter l'utilisation de notre service, merci de bien vouloir compléter notre formulaire d’inscription à cette adresse : http://merci-charles.fr/inscription.html?phone=%s", $user->getPhone());
+                $text = sprintf("Bonjour, Je suis Charles votre nouvel assistant personnel. Afin de faciliter l'utilisation de notre service, merci de bien vouloir compléter notre formulaire d’inscription à cette adresse : http://merci-charles.fr/inscription.html?id=%d&phone=%s", $user->getId(), $user->getPhone());
 
                 break;
             case 'web':
